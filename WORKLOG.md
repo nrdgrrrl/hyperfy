@@ -2,6 +2,12 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Preserve local LAN and Tailscale access
+
+- Replaced the fixed Tailscale URLs with relative API and asset paths plus a WebSocket URL derived from the browser's host and protocol. Added a derived image patch in `Dockerfile` and `scripts/patch-hyperfy-env.js`, and a `scripts/deploy.sh` command that combines the repository override with the protected base Compose config.
+- Decision: derive endpoints from the address each browser used so LAN clients stay on the LAN address and Tailscale clients stay on the tailnet. Kept the private environment file and world data outside this repository.
+- Checks: shell syntax and merged Compose config passed; deployment rebuilt and restarted the service. Evaluated `/env.js` for LAN, Tailscale, and HTTPS origins; health and sample asset requests returned 200 and WebSocket handshakes returned 101 via both LAN and Tailscale addresses.
+
 ## 2026-10-18 — Fix Hyperfy client URLs for Tailscale
 
 - Added `compose.tailscale.yaml` to point the browser's API, WebSocket, and asset URLs at `wintermute.taileb49eb.ts.net:3001`, documented its use in `AGENTS.md`, and recreated the Hyperfy service with the override.

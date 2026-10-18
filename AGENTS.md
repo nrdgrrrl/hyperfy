@@ -2,11 +2,11 @@
 
 ## Project Structure & Organization
 
-This repository customizes the Hyperfy instance at `localhost:3001`. It has no app source or test suite yet; `compose.tailscale.yaml` overrides client URLs. Keep code and assets here; use clear folders such as `src/`, `assets/`, and `tests/`. The base Compose file and app source are under `/srv/hyperfy`; live world data is under `/srv/hyperfy/world` and is not source.
+This repository customizes the Hyperfy instance at `localhost:3001`. The `Dockerfile` and `scripts/patch-hyperfy-env.js` make the WebSocket address follow the browser's origin; the Compose override uses relative API and asset paths. Keep code and assets here; use clear folders such as `src/`, `assets/`, and `tests/`. The base Compose file and app source are under `/srv/hyperfy`; live world data is under `/srv/hyperfy/world` and is not source.
 
 ## Build, Test, and Development
 
-No build, test, or local development commands are configured yet. Before using a command, check the scripts and instructions added with the relevant code (for example, `npm run` for an npm project). When introducing a toolchain, add reproducible setup and run commands to this guide and the project manifest or build configuration.
+Run `./scripts/deploy.sh` to build and apply the derived Hyperfy image with the base Compose configuration. It requires Docker access and the existing `/srv/hyperfy` deployment. There is no app test suite or local development server configured; document commands if either is added.
 
 ## Coding Style & Naming
 

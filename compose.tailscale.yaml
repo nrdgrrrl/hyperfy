@@ -1,6 +1,10 @@
 services:
   hyperfy:
+    image: hyperfy-metaverse:dual-network
+    build:
+      context: /home/victoria/projects/metaverse
+      dockerfile: Dockerfile
     environment:
-      PUBLIC_API_URL: "http://wintermute.taileb49eb.ts.net:3001/api"
-      PUBLIC_WS_URL: "ws://wintermute.taileb49eb.ts.net:3001/ws"
-      ASSETS_BASE_URL: "http://wintermute.taileb49eb.ts.net:3001/assets"
+      PUBLIC_API_URL: "/api"
+      PUBLIC_WS_URL: "ws://localhost:3001/ws"
+      ASSETS_BASE_URL: "/assets"
