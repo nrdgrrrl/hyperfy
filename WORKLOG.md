@@ -2,6 +2,12 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Fix Hyperfy client URLs for Tailscale
+
+- Added `compose.tailscale.yaml` to point the browser's API, WebSocket, and asset URLs at `wintermute.taileb49eb.ts.net:3001`, documented its use in `AGENTS.md`, and recreated the Hyperfy service with the override.
+- Decision: all three URLs had to change because the HTML metadata and world snapshot also use `ASSETS_BASE_URL`. Kept the base Compose file and its private environment file outside this repository; the override contains no credentials. The initial `authToken=null` is the normal first connection, after which the server issues a token.
+- Checks: validated the merged Compose config; confirmed `/health` returns `ok`, `/env.js` advertises the Tailscale URLs, the WebSocket upgrade returns `101 Switching Protocols`, and a world GLB asset returns HTTP 200 through the Tailscale hostname.
+
 ## 2026-10-18 — Start the work log
 
 - Added this log and updated `AGENTS.md` to require a dated entry for each work task, including decisions and relevant checks.

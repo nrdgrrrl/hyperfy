@@ -2,7 +2,7 @@
 
 ## Project Structure & Organization
 
-This repository is the workspace for customizations to the Hyperfy instance at `localhost:3001`. It currently contains no application source, assets, tests, or deployment files. Keep new project code and customization assets in this repository. As the project grows, use clear top-level folders such as `src/`, `assets/`, and `tests/`, and document any new structure here. The live server currently runs from a Docker image; its world database and uploaded assets are stored separately under `/srv/hyperfy/world`. Do not treat that runtime data directory as the source tree.
+This repository customizes the Hyperfy instance at `localhost:3001`. It has no app source or test suite yet; `compose.tailscale.yaml` overrides client URLs. Keep code and assets here; use clear folders such as `src/`, `assets/`, and `tests/`. The base Compose file and app source are under `/srv/hyperfy`; live world data is under `/srv/hyperfy/world` and is not source.
 
 ## Build, Test, and Development
 
@@ -18,7 +18,7 @@ There is no test framework or coverage requirement in the current repository. Ad
 
 ## Commits & Pull Requests
 
-There is no commit history to establish a project-specific convention. Use a short, imperative commit subject that describes one scoped change, such as `Add lobby signage`. Create a meaningful commit for each completed task that changes repository files, including documentation, and push it when a usable remote is configured unless the user opts out. Pull requests should explain the change, include relevant verification results, link related issues when available, and provide screenshots for visual changes.
+There is no commit history to establish a project-specific convention. Use a short, imperative subject, such as `Add lobby signage`. Commit each completed task that changes repository files, including docs, and push when a usable remote exists unless the user opts out. Pull requests should explain the change, report checks, link related issues, and include screenshots for visual changes.
 
 ## Work Log
 
@@ -26,4 +26,4 @@ For every work task, add a dated entry to `WORKLOG.md` describing what changed a
 
 ## Configuration & Runtime Data
 
-Never commit credentials, private environment files, or generated production world data. Keep configuration examples free of secrets. Changes in this repository do not automatically update the running Docker instance; follow the deployment setup documented here once it is added.
+Combine `compose.tailscale.yaml` with `/srv/hyperfy/compose.yaml` when recreating the service; repository changes do not apply automatically. Keep credentials in the private environment file and never commit it or generated world data. The live database and uploaded assets are stored separately under `/srv/hyperfy/world`.
