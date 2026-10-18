@@ -2,6 +2,14 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Investigate model upload issue #1
+
+- Traced the reported stack to `hashFile()` in `src/core/utils-client.js`, used by model, avatar, image, script, and app upload paths. `ClientNetwork.upload()` hashes the same file again for its duplicate check; the server then hashes it again when storing it.
+- Ordinary HTTP on the LAN IP and Tailscale hostname is not a secure browser context, where `crypto.subtle` is unavailable. This is consistent with the `digest` error in [issue #1](https://github.com/nrdgrrrl/hyperfy/issues/1).
+- Compared three remedies: offer trusted HTTPS (Tailscale Serve covers tailnet clients; LAN clients also need a trusted HTTPS route); add a browser-side SHA-256 fallback in the shared helper; or move content hash naming into the upload API and update callers to use the server's returned asset name.
+- Recommended plan: add a proven browser-compatible SHA-256 fallback at `hashFile()`, preserve the current content-addressed filenames and server-side verification, and test client/server hash parity plus uploads over both HTTP origins. HTTPS can be added as an optional access path; server-owned naming is a larger API refactor.
+- No code changed and no tests run; this turn was investigation and planning only.
+
 ## 2026-10-18 — Fork upstream and define release workflow
 
 - Created the personal fork `nrdgrrrl/hyperfy`, configured `origin` for that fork and `upstream` for `hyperfy-xyz/hyperfy`, and integrated upstream `main` into the repository's `main` branch.
