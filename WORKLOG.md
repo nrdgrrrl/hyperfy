@@ -2,6 +2,12 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Attempt to enable Tailscale Serve
+
+- Tried `tailscale serve --bg 3001`; Tailscale denied the unprivileged request and instructed use of `sudo`. The non-interactive session cannot provide the host sudo password, so no Serve configuration was applied.
+- Decision: have a host administrator run the documented command directly rather than pass credentials through the agent session. Once enabled, verify the HTTPS page, WebSocket upgrade, and health endpoint.
+- Checks: confirmed Tailscale v1.102.3 and that Serve had no existing configuration before the attempt.
+
 ## 2026-10-18 — Review Tailscale HTTPS for Hyperfy
 
 - Checked the host's Tailscale v1.102.3 configuration; Serve is not configured. Tailscale Serve can proxy Hyperfy's local port 3001 to a tailnet-only HTTPS URL, which gives browsers a secure context and lets the existing origin-based WebSocket logic select `wss`.
