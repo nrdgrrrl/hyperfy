@@ -2,6 +2,15 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Fork upstream and define release workflow
+
+- Created the personal fork `nrdgrrrl/hyperfy`, configured `origin` for that fork and `upstream` for `hyperfy-xyz/hyperfy`, and integrated upstream `main` into the repository's `main` branch.
+- Moved the LAN/Tailscale WebSocket origin logic into `src/server/index.js`, so the browser connects to the host and protocol it used. Restored upstream's standard `Dockerfile`; the deployment override now builds this source tree and tags the image as `hyperfy-metaverse:production`.
+- Updated `scripts/deploy.sh` to deploy only a clean `production` branch and pass its commit hash into the build. Documented feature -> `main` -> `production`, fork push, and upstream fetch/merge practices in `AGENTS.md`.
+- Enabled Issues on the personal fork and opened [issue #1](https://github.com/nrdgrrrl/hyperfy/issues/1) for model uploads failing when `crypto.subtle.digest` is unavailable on HTTP origins.
+- Decision: keep upstream as a fetch-only remote, use `main` for reviewed development, and make `production` the explicit deploy target. This gives the running service a traceable commit while retaining normal upstream updates.
+- Checks: GitHub fork created and source merge resolved; `sh -n scripts/deploy.sh` and the scoped `git diff --check` pass. Runtime deployment is restricted to a clean `production` commit and embeds its commit hash.
+
 ## 2026-10-18 — Preserve local LAN and Tailscale access
 
 - Replaced the fixed Tailscale URLs with relative API and asset paths plus a WebSocket URL derived from the browser's host and protocol. Added a derived image patch in `Dockerfile` and `scripts/patch-hyperfy-env.js`, and a `scripts/deploy.sh` command that combines the repository override with the protected base Compose config.

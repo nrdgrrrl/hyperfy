@@ -1,29 +1,23 @@
 # Repository Guidelines
 
-## Project Structure & Organization
+## Project Structure
 
-This repository customizes the Hyperfy instance at `localhost:3001`. The `Dockerfile` and `scripts/patch-hyperfy-env.js` make the WebSocket address follow the browser's origin; the Compose override uses relative API and asset paths. Keep code and assets here; use clear folders such as `src/`, `assets/`, and `tests/`. The base Compose file and app source are under `/srv/hyperfy`; live world data is under `/srv/hyperfy/world` and is not source.
+This repository is a fork of [Hyperfy](https://github.com/hyperfy-xyz/hyperfy), with project-specific changes kept in the source tree. Client and server code live in `src/client/` and `src/server/`; shared runtime code is in `src/core/`; world defaults and bundled assets are in `src/world/`. `compose.tailscale.yaml` configures this host's LAN and Tailscale deployment, and `scripts/deploy.sh` deploys it. Live world data and private configuration remain under `/srv/hyperfy`, outside Git.
 
-## Build, Test, and Development
+## Development and Deployment
 
-Run `./scripts/deploy.sh` to build and apply the derived Hyperfy image with the base Compose configuration. It requires Docker access and the existing `/srv/hyperfy` deployment. There is no app test suite or local development server configured; document commands if either is added.
+Use Node.js 22.11+ and npm 10+. Run `npm ci` to install locked dependencies, `npm run dev` for development, `npm run build` to create production assets, and `npm run lint` for ESLint. The repository has no dedicated test suite. `./scripts/deploy.sh` builds and deploys the current commit; it only runs from a clean `production` branch and requires Docker plus the existing `/srv/hyperfy` configuration.
 
-## Coding Style & Naming
+## Code and Tests
 
-Follow the conventions of the language and framework introduced by each change. Use descriptive names, keep modules focused, and avoid adding dependencies without a clear need. Use consistent formatting and add a formatter or linter configuration when the codebase adopts one; no formatter, linter, or naming convention is established yet.
+Follow the surrounding Hyperfy code style: two-space indentation, semicolons omitted, single quotes in JavaScript, and descriptive camelCase names. Keep changes focused and avoid formatting unrelated upstream files. There is no test framework or coverage threshold; run the relevant build or lint command for code changes and record manual checks for runtime behavior in the work log.
 
-## Testing
+## Git and Release Workflow
 
-There is no test framework or coverage requirement in the current repository. Add focused tests alongside new behavior when a test setup is introduced, and document the command contributors should run. For visual Hyperfy changes, include a screenshot or a concise manual verification note in the pull request.
+`origin` is the personal fork at `nrdgrrrl/hyperfy`; `upstream` is `hyperfy-xyz/hyperfy` and is fetch-only. Never push to `upstream`. Do feature work on `feature/<short-name>` branches from `main`, then review and merge it to `main`. Fetch upstream changes with `git fetch upstream` and merge them into `main` deliberately. Push completed work to `origin`.
 
-## Commits & Pull Requests
+`production` is the only deployment branch. Promote reviewed `main` changes into it with a fast-forward merge, push `production` to `origin`, then run `./scripts/deploy.sh` from that clean branch. This keeps the deployed commit visible and reproducible. Use short imperative commit subjects (for example, `Derive WebSocket URL from browser origin`). Pull requests should describe behavior and checks; include screenshots for visual changes.
 
-There is no commit history to establish a project-specific convention. Use a short, imperative subject, such as `Add lobby signage`. Commit each completed task that changes repository files, including docs, and push when a usable remote exists unless the user opts out. Pull requests should explain the change, report checks, link related issues, and include screenshots for visual changes.
+## Configuration and Work Log
 
-## Work Log
-
-For every work task, add a dated entry to `WORKLOG.md` describing what changed and why key decisions were made. Put the newest entry first. Include relevant checks performed, or state briefly why checks were not applicable.
-
-## Configuration & Runtime Data
-
-Combine `compose.tailscale.yaml` with `/srv/hyperfy/compose.yaml` when recreating the service; repository changes do not apply automatically. Keep credentials in the private environment file and never commit it or generated world data. The live database and uploaded assets are stored separately under `/srv/hyperfy/world`.
+Never commit secrets, `.env` files, or generated live world data. Keep runtime configuration and the persistent database/assets under `/srv/hyperfy/world`. Add a dated, newest-first entry to `WORKLOG.md` for each work task, including changes, the reasons behind key decisions, and checks performed.
