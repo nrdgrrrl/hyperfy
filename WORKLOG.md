@@ -2,6 +2,12 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
+## 2026-10-18 — Review Tailscale HTTPS for Hyperfy
+
+- Checked the host's Tailscale v1.102.3 configuration; Serve is not configured. Tailscale Serve can proxy Hyperfy's local port 3001 to a tailnet-only HTTPS URL, which gives browsers a secure context and lets the existing origin-based WebSocket logic select `wss`.
+- Decision: treat this as an optional tailnet access path, not the complete upload fix, because it does not secure the direct LAN HTTP URL. Tailscale requires HTTPS/MagicDNS setup, and certificate names appear in public Certificate Transparency logs while service access remains governed by tailnet ACLs.
+- No configuration changes made. Checked local Serve status and current Tailscale documentation; the command to enable it was not run.
+
 ## 2026-10-18 — Investigate model upload issue #1
 
 - Traced the reported stack to `hashFile()` in `src/core/utils-client.js`, used by model, avatar, image, script, and app upload paths. `ClientNetwork.upload()` hashes the same file again for its duplicate check; the server then hashes it again when storing it.
