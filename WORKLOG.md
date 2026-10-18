@@ -10,6 +10,7 @@ This log records repository work, its outcomes, and the reasoning behind key dec
 - Enabled Issues on the personal fork and opened [issue #1](https://github.com/nrdgrrrl/hyperfy/issues/1) for model uploads failing when `crypto.subtle.digest` is unavailable on HTTP origins.
 - Decision: keep upstream as a fetch-only remote, use `main` for reviewed development, and make `production` the explicit deploy target. This gives the running service a traceable commit while retaining normal upstream updates.
 - Checks: GitHub fork created and source merge resolved; `sh -n scripts/deploy.sh` and the scoped `git diff --check` pass. Runtime deployment is restricted to a clean `production` commit and embeds its commit hash.
+- Runtime check: deployed source commit `60e3c87`; the container became healthy, `/health` returned 200, LAN and Tailscale origins produced their own WebSocket URLs, and both WebSocket handshakes returned 101.
 
 ## 2026-10-18 — Preserve local LAN and Tailscale access
 
