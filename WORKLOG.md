@@ -2,9 +2,15 @@
 
 This log records repository work, its outcomes, and the reasoning behind key decisions. New entries go first.
 
-## 2026-10-18 — Attempt to enable Tailscale Serve
+## 2026-10-18 — Enable Tailscale HTTPS on port 8443
 
-- The unprivileged CLI attempt was denied; the user then ran `sudo tailscale serve --bg 3001`. Serve configured an HTTPS proxy to port 3001 and obtained a TLS certificate, but it could not bind port 443 because another host service already owns that port. HTTPS currently fails its TLS handshake; no existing service was stopped or changed.
+- Reconfigured Tailscale Serve to proxy `https://wintermute.taileb49eb.ts.net:8443/` to Hyperfy on `127.0.0.1:3001`. Port 443 was already occupied, so 8443 preserves that existing service.
+- Checks: HTTPS health returned 200; `/env.js` selected `wss://wintermute.taileb49eb.ts.net:8443/ws`; the secure WebSocket upgrade returned 101. LAN HTTP health and WebSocket checks still returned 200 and 101. Serve status confirms the HTTPS endpoint is tailnet-only.
+- Decision: retain both access paths: HTTPS for tailnet clients and direct HTTP for LAN clients. The external Serve configuration does not require rebuilding or deploying the Hyperfy container.
+
+## 2026-10-18 — Initial Tailscale Serve setup on port 443
+
+- The unprivileged CLI attempt was denied; the user then ran `sudo tailscale serve --bg 3001`. Serve obtained a TLS certificate but could not bind port 443 because another host service already owns that port, so the initial HTTPS endpoint failed its TLS handshake. No existing service was stopped or changed.
 - Decision: move this Serve endpoint to unused port 8443, leaving the existing 443 service intact. This requires a host administrator to reset the Serve config created for this setup and reconfigure its HTTPS port.
 - Checks: Tailscale Serve status shows the port 443 proxy; daemon logs report the certificate is ready and the port bind failed. The LAN health endpoint and WebSocket upgrade still return 200 and 101; port 8443 is unused.
 
