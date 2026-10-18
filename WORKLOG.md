@@ -4,9 +4,9 @@ This log records repository work, its outcomes, and the reasoning behind key dec
 
 ## 2026-10-18 — Attempt to enable Tailscale Serve
 
-- Tried `tailscale serve --bg 3001`; Tailscale denied the unprivileged request and instructed use of `sudo`. The non-interactive session cannot provide the host sudo password, so no Serve configuration was applied.
-- Decision: have a host administrator run the documented command directly rather than pass credentials through the agent session. Once enabled, verify the HTTPS page, WebSocket upgrade, and health endpoint.
-- Checks: confirmed Tailscale v1.102.3 and that Serve had no existing configuration before the attempt.
+- The unprivileged CLI attempt was denied; the user then ran `sudo tailscale serve --bg 3001`. Serve configured an HTTPS proxy to port 3001 and obtained a TLS certificate, but it could not bind port 443 because another host service already owns that port. HTTPS currently fails its TLS handshake; no existing service was stopped or changed.
+- Decision: move this Serve endpoint to unused port 8443, leaving the existing 443 service intact. This requires a host administrator to reset the Serve config created for this setup and reconfigure its HTTPS port.
+- Checks: Tailscale Serve status shows the port 443 proxy; daemon logs report the certificate is ready and the port bind failed. The LAN health endpoint and WebSocket upgrade still return 200 and 101; port 8443 is unused.
 
 ## 2026-10-18 — Review Tailscale HTTPS for Hyperfy
 
