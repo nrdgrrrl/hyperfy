@@ -32,4 +32,4 @@ docker run --rm --entrypoint /usr/bin/docker-compose \
   -p hyperfy \
   -f /srv/hyperfy/compose.yaml \
   -f "$repo_root/compose.tailscale.yaml" \
-  up -d hyperfy
+  up -d --build hyperfy
